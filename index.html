@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sai Woon Tip — CS, AI Security</title>
+<meta name="description" content="Sai Woon Tip — CS junior at the University of Dayton. AI security research, deepfake detection, and things built at 2am.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0A0A'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='%23F0F0EB' font-family='monospace' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="brand">SAI WOON TIP <span class="nav-sec" id="nav-sec">¶ hero</span></div>
+  <div class="links">
+    <a href="#research">Research</a>
+    <a href="#projects">Projects</a>
+    <a href="#work">Work</a>
+    <a href="#skills">Skills</a>
+  </div>
+  <a class="nav-cta" href="mailto:tips01@udayton.edu">Get in touch <span class="arrow">↗</span></a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="dark hero-section" id="hero">
+  <canvas class="hero-bg" id="hero-ascii"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="photo-picker" id="photo-picker">
+    <button class="pp-btn" id="pp-btn" aria-haspopup="true">Backdrop <span class="pp-caret">▾</span></button>
+    <div class="pp-menu" id="pp-menu"></div>
+  </div>
+  <div class="hero-frame" aria-hidden="true"></div>
+  <div class="hero-statement reveal">
+    <p>We are born to be Creative</p>
+    <p>CS Junior at the University of Dayton.  Passionate in learning, discovering & creating.</p>
+  </div>
+  <div class="hero-fig" aria-hidden="true">fig. 00 — self-portrait as noise</div>
+</section>
+<h1 class="hero-name">SAI WOON TIP</h1>
+
+<!-- ===== RESEARCH + EDUCATION (SS-style) ===== -->
+<section class="light" id="research">
+  <div class="contain">
+    <h2 class="reveal typewriter">Researches & Studies</h2>
+
+    <div class="fold">
+      <div class="fold-left">
+        <div class="fold-kicker">01 · IEEE · ICSC 2026</div>
+        <div class="fold-word">Voice</div>
+      </div>
+      <a class="ss-img" href="https://ieeexplore.ieee.org/document/11486414" target="_blank" rel="noopener" style="background-image:url('banners/3007.jpg')"></a>
+      <div class="fold-right">
+        <div class="fold-word">Liveliness</div>
+        <p class="fold-desc">Real-time deepfake audio detection for securing voice assistants. CNN classifier on Mel-spectrograms in PyTorch. 2nd author, peer-reviewed. <span class="ss-metric">PUB.</span></p>
+      </div>
+    </div>
+    <hr class="ss-divider">
+
+    <div class="fold">
+      <div class="fold-left">
+        <div class="fold-kicker">02 · Dean's Summer Fellowship · 2025</div>
+        <div class="fold-word">Deepfake</div>
+      </div>
+      <a class="ss-img" href="https://udayton.edu/blogs/artssciences/2025-stories/25-11-3-dsf-deepfake.php" target="_blank" rel="noopener" style="background-image:url('banners/2999.jpg')"></a>
+      <div class="fold-right">
+        <div class="fold-word">Detection</div>
+        <p class="fold-desc">Security-focused audio forensics. Built Librosa pipelines to identify synthetic artifacts. Documented attack vectors against voice authentication. <span class="ss-metric">1 PAPER</span></p>
+      </div>
+    </div>
+    <hr class="ss-divider">
+
+    <div class="fold">
+      <div class="fold-left">
+        <div class="fold-kicker">03 · BS Computer Science · Grad 2028</div>
+        <div class="fold-word">Univ. of</div>
+      </div>
+      <a class="ss-img" href="https://udayton.edu/" target="_blank" rel="noopener" style="background-image:url('banners/2610.jpg')"></a>
+      <div class="fold-right">
+        <div class="fold-word">Dayton</div>
+        <p class="fold-desc">Global Academic Excellence Scholarship (full merit). VP of UDBURSA. Raised $1,250+ for Myanmar earthquake relief. Dayton, Ohio. <span class="ss-metric">FULL MERIT</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section class="dark" id="projects">
+  <div class="contain">
+    <div class="label reveal">Selected Projects</div>
+    <h2 class="reveal" id="projects-title">Projects</h2>
+
+    <div class="proj-slider reveal">
+      <div class="ps-head">
+        <div class="ps-tabs">
+          <button class="ps-tab active"><span class="ps-box"></span>PitchLens</button>
+          <button class="ps-tab"><span class="ps-box"></span>Cosmos</button>
+          <button class="ps-tab"><span class="ps-box"></span>Placebet</button>
+          <button class="ps-tab"><span class="ps-box"></span>Project 04</button>
+          <button class="ps-tab"><span class="ps-box"></span>Project 05</button>
+          <button class="ps-tab"><span class="ps-box"></span>Project 06</button>
+          <button class="ps-tab"><span class="ps-box"></span>Project 07</button>
+          <button class="ps-tab"><span class="ps-box"></span>Project 08</button>
+        </div>
+        <div class="ps-arrows">
+          <button class="ps-arrow" id="ps-prev" aria-label="Previous project">←</button>
+          <button class="ps-arrow" id="ps-next" aria-label="Next project">→</button>
+        </div>
+      </div>
+
+      <div class="ps-track" id="ps-track">
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/205757.jpg')"></div>
+          <div class="ps-idx">[01]</div>
+          <h3 class="ps-title">PitchLens</h3>
+          <p class="ps-desc">Live football match analysis from broadcast frames. Computer vision player &amp; ball tracking with tactical overlays — built end-to-end on a zero-cost stack.</p>
+          <div class="ps-tags"><span>COMPUTER VISION</span><span>GEMINI FLASH</span><span>$0 STACK</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/2998.jpg')"></div>
+          <div class="ps-idx">[02]</div>
+          <h3 class="ps-title">Cosmos</h3>
+          <p class="ps-desc">A 3D "galaxy" graph view plugin for Obsidian. Notes become stars clustered by links, laid out with force physics and rendered in WebGL.</p>
+          <div class="ps-tags"><span>THREE.JS</span><span>D3-FORCE-3D</span><span>OBSIDIAN PLUGIN</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/6992129.jpg')"></div>
+          <div class="ps-idx">[03]</div>
+          <h3 class="ps-title">Placebet</h3>
+          <p class="ps-desc">Play-money football betting for friends — live odds, leagues and leaderboards. Next.js on Vercel with Neon Postgres and The Odds API.</p>
+          <div class="ps-tags"><span>NEXT.JS</span><span>NEON POSTGRES</span><span>LIVE</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/1875.jpg')"></div>
+          <div class="ps-idx">[04]</div>
+          <h3 class="ps-title">Coming Soon</h3>
+          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
+          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/2610.jpg')"></div>
+          <div class="ps-idx">[05]</div>
+          <h3 class="ps-title">Coming Soon</h3>
+          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
+          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/2999.jpg')"></div>
+          <div class="ps-idx">[06]</div>
+          <h3 class="ps-title">Coming Soon</h3>
+          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
+          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/3007.jpg')"></div>
+          <div class="ps-idx">[07]</div>
+          <h3 class="ps-title">Coming Soon</h3>
+          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
+          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+        </article>
+        <article class="ps-slide">
+          <div class="ps-media" style="--img:url('banners/205757.jpg')"></div>
+          <div class="ps-idx">[08]</div>
+          <h3 class="ps-title">Coming Soon</h3>
+          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
+          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORK EXPERIENCE ===== -->
+<section class="light" id="work">
+  <div class="contain">
+    <div class="label reveal">Experience</div>
+    <h2 class="reveal">Where I've<br>shipped work.</h2>
+    <p class="tl-kicker reveal">Four years. Five roles. Two countries.</p>
+
+    <div class="timeline reveal">
+      <div class="tl-col">
+        <div class="tl-top">
+          <div class="tl-card ghost">
+            <div class="tl-role">Database Assistant</div>
+            <div class="tl-org">71 Store, Mandalay</div>
+            <div class="tl-date">Jun 2022 → Aug 2023</div>
+          </div>
+        </div>
+        <div class="tl-year">2022</div>
+        <div class="tl-bot"></div>
+      </div>
+
+      <div class="tl-col">
+        <div class="tl-top"></div>
+        <div class="tl-year">2024</div>
+        <div class="tl-bot">
+          <div class="tl-card ghost">
+            <div class="tl-role">Enrolled — Univ. of Dayton</div>
+            <div class="tl-org">BS Computer Science · full-merit scholarship</div>
+            <div class="tl-date">Fall 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-col">
+        <div class="tl-top">
+          <div class="tl-card">
+            <div class="tl-role">Vice President</div>
+            <div class="tl-org">UDBURSA — UD Burmese Students Assoc.</div>
+            <div class="tl-date">Jan 2025 → Now</div>
+          </div>
+        </div>
+        <div class="tl-year">2025</div>
+        <div class="tl-bot">
+          <div class="tl-card ghost">
+            <div class="tl-role">Technical Support Rep</div>
+            <div class="tl-org">UDit — University of Dayton IT</div>
+            <div class="tl-date">Apr 2025 → Aug 2026</div>
+          </div>
+          <div class="tl-card ghost">
+            <div class="tl-role">$1,250+ raised</div>
+            <div class="tl-org">Myanmar earthquake relief</div>
+            <div class="tl-date">2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-col">
+        <div class="tl-top">
+          <div class="tl-card">
+            <div class="tl-role">Project Manager</div>
+            <div class="tl-org">UDit — University of Dayton IT</div>
+            <div class="tl-date">Aug 2026 → Now</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-role">Phishing Simulation Team</div>
+            <div class="tl-org">Cyber Flyer</div>
+            <div class="tl-date">Aug 2026 → Now</div>
+          </div>
+        </div>
+        <div class="tl-year now">2026</div>
+        <div class="tl-bot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section class="dark" id="skills">
+  <canvas class="skills-ascii" id="skills-ascii-left" aria-hidden="true"></canvas>
+  <canvas class="skills-ascii" id="skills-ascii-right" aria-hidden="true"></canvas>
+  <div class="contain">
+    <p class="epigraph" id="skills-epigraph">What the hand learned, <em>the machine remembers.</em></p>
+    <div class="label reveal">Capabilities</div>
+    <h2 class="reveal">Skills<br>&amp; tools.</h2>
+
+    <div class="shelf reveal" id="shelf">
+      <div class="book active" style="--tone:#201812; --band:#9E4432; --cover:url('banners/3007.jpg')" tabindex="0" role="button" aria-expanded="true">
+        <span class="book-spine"><span class="book-no">VOL. I</span><span class="book-title">Security</span></span>
+        <div class="book-page">
+          <div class="plate-no">Vol. I</div>
+          <h3>Security</h3>
+          <ul>
+            <li>Deepfake Detection</li>
+            <li>Audio Forensics</li>
+            <li>Social Engineering Awareness</li>
+            <li>Phishing Simulation Design</li>
+          </ul>
+        </div>
+      </div>
+      <div class="book" style="--tone:#1B1A16; --band:#B08D3E; --cover:url('banners/2999.jpg')" tabindex="0" role="button" aria-expanded="false">
+        <span class="book-spine"><span class="book-no">VOL. II</span><span class="book-title">Generative AI</span></span>
+        <div class="book-page">
+          <div class="plate-no">Vol. II</div>
+          <h3>Generative AI</h3>
+          <ul>
+            <li>AI Agentic Workflows</li>
+            <li>RAG Pipelines</li>
+            <li>Assisted Web-App Development</li>
+            <li>Tool Orchestration</li>
+          </ul>
+        </div>
+      </div>
+      <div class="book" style="--tone:#241410; --band:#EDEDE8; --cover:url('banners/1875.jpg')" tabindex="0" role="button" aria-expanded="false">
+        <span class="book-spine"><span class="book-no">VOL. III</span><span class="book-title">Languages &amp; Tools</span></span>
+        <div class="book-page">
+          <div class="plate-no">Vol. III</div>
+          <h3>Languages &amp; Tools</h3>
+          <ul>
+            <li>Python · Java</li>
+            <li>PyTorch · Librosa</li>
+            <li>Google AI Studio</li>
+            <li>Figma · Affinity · FL Studio</li>
+          </ul>
+        </div>
+      </div>
+      <div class="book ghost-book" style="--tone:#171512; --band:#4A443B; --cover:url('banners/2610.jpg')" tabindex="0" role="button" aria-expanded="false">
+        <span class="book-spine"><span class="book-no">VOL. IV</span><span class="book-title">Forthcoming</span></span>
+        <div class="book-page">
+          <div class="plate-no">Vol. IV</div>
+          <h3>Forthcoming</h3>
+          <ul>
+            <li>Reserved for the next field of study</li>
+            <li>Swap the title, cover and this list</li>
+          </ul>
+        </div>
+      </div>
+      <div class="book ghost-book" style="--tone:#15130F; --band:#4A443B; --cover:url('banners/205757.jpg')" tabindex="0" role="button" aria-expanded="false">
+        <span class="book-spine"><span class="book-no">VOL. V</span><span class="book-title">Forthcoming</span></span>
+        <div class="book-page">
+          <div class="plate-no">Vol. V</div>
+          <h3>Forthcoming</h3>
+          <ul>
+            <li>Reserved for the next field of study</li>
+            <li>Swap the title, cover and this list</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="shelf-plank" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ===== CTA / TERMINAL CONTACT ===== -->
+<section class="dark" id="contact">
+  <div class="contain">
+    <div class="label reveal">Contact</div>
+    <h2 class="reveal">Let's build<br>something that<br>catches what others miss.</h2>
+
+    <p class="epistola reveal">fig. 09 — <em>epistola electronica.</em> The machine carries your words; I answer in person.</p>
+
+    <div class="term reveal" id="term">
+      <div class="term-bar">
+        <span class="term-dot td-r"></span><span class="term-dot td-y"></span><span class="term-dot td-g"></span>
+        <span class="term-title">guest@sai — contact</span>
+      </div>
+      <div class="term-body" id="term-body">
+        <div class="term-line term-dim">// this is a real inbox, not a decoration.</div>
+        <div class="term-line">Type <b>/start</b> to say hi — or <b>/help</b> for all commands.</div>
+      </div>
+      <div class="term-input-row">
+        <span class="term-prompt" id="term-prompt">guest@sai:~$</span>
+        <input id="term-input" class="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal contact input">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<section class="dark" style="padding-top:0">
+  <div class="contain">
+    <div class="fleuron" aria-hidden="true">❦</div>
+    <footer>
+      <div>
+        <div class="label">Email</div>
+        <a href="mailto:tips01@udayton.edu">tips01@udayton.edu</a>
+      </div>
+      <div>
+        <div class="label">LinkedIn</div>
+        <a href="https://www.linkedin.com/in/sai-woon-tip-as02387" target="_blank" rel="noopener">sai-woon-tip-as02387</a>
+      </div>
+      <div>
+        <div class="label">Location</div>
+        <p style="font-size:14px;opacity:0.6">Dayton, Ohio · <span id="clock"></span></p>
+      </div>
+      <div class="copy">© Sai Woon Tip · 2026 · University of Dayton CS '28</div>
+    </footer>
+  </div>
+</section>
+
+<div class="liquid-cursor" id="liquid-cursor"><span>more</span></div>
+
+<script src="script.js"></script>
+</body>
+</html>
