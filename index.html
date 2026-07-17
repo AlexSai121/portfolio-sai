@@ -5,24 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sai Woon Tip — CS, AI Security</title>
 <meta name="description" content="Sai Woon Tip — CS junior at the University of Dayton. AI security research, deepfake detection, and things built at 2am.">
-<meta name="theme-color" content="#0A0A0A">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0A0A'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='%23F0F0EB' font-family='monospace' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000000'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='%23FCFDFF' font-family='monospace' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('js-loading')</script>
 </head>
 <body>
 
+<!-- ===== PRELOADER ===== -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="pl-inner">
+    <div class="pl-name">Sai Woon Tip</div>
+    <div class="pl-rule"></div>
+  </div>
+</div>
+
 <nav>
-  <div class="brand">SAI WOON TIP <span class="nav-sec" id="nav-sec">¶ hero</span></div>
+  <div class="brand">SAI WOON TIP <span class="nav-sec" id="nav-sec">00</span></div>
   <div class="links">
     <a href="#research">Research</a>
     <a href="#projects">Projects</a>
     <a href="#work">Work</a>
     <a href="#skills">Skills</a>
   </div>
-  <a class="nav-cta" href="mailto:tips01@udayton.edu">Get in touch <span class="arrow">↗</span></a>
+  <a class="nav-cta" href="#contact">Get in touch <span class="arrow">↗</span></a>
   <div class="scroll-progress" aria-hidden="true"></div>
 </nav>
 
@@ -34,19 +43,19 @@
     <button class="pp-btn" id="pp-btn" aria-haspopup="true">Backdrop <span class="pp-caret">▾</span></button>
     <div class="pp-menu" id="pp-menu"></div>
   </div>
-  <div class="hero-frame" aria-hidden="true"></div>
   <div class="hero-statement reveal">
     <p>We are born to be Creative</p>
-    <p>CS Junior at the University of Dayton.  Passionate in learning, discovering & creating.</p>
+    <p>CS Junior at the University of Dayton. Passionate in learning, discovering &amp; creating.</p>
   </div>
-  <div class="hero-fig" aria-hidden="true">fig. 00 — self-portrait as noise</div>
+  <div class="hero-cue" aria-hidden="true">scroll</div>
 </section>
-<h1 class="hero-name">SAI WOON TIP</h1>
+<h1 class="hero-name">Sai Woon Tip</h1>
 
 <!-- ===== RESEARCH + EDUCATION (SS-style) ===== -->
 <section class="light" id="research">
   <div class="contain">
-    <h2 class="reveal typewriter">Researches & Studies</h2>
+    <div class="label chapter reveal" aria-hidden="true"><span class="ch-no">01</span></div>
+    <h2 class="reveal">Research</h2>
 
     <div class="fold">
       <div class="fold-left">
@@ -91,22 +100,19 @@
 <!-- ===== PROJECTS ===== -->
 <section class="dark" id="projects">
   <div class="contain">
-    <div class="label reveal">Selected Projects</div>
+    <div class="label chapter reveal" aria-hidden="true"><span class="ch-no">02</span></div>
     <h2 class="reveal" id="projects-title">Projects</h2>
 
     <div class="proj-slider reveal">
       <div class="ps-head">
         <div class="ps-tabs">
-          <button class="ps-tab active"><span class="ps-box"></span>PitchLens</button>
-          <button class="ps-tab"><span class="ps-box"></span>Cosmos</button>
-          <button class="ps-tab"><span class="ps-box"></span>Placebet</button>
-          <button class="ps-tab"><span class="ps-box"></span>Project 04</button>
-          <button class="ps-tab"><span class="ps-box"></span>Project 05</button>
-          <button class="ps-tab"><span class="ps-box"></span>Project 06</button>
-          <button class="ps-tab"><span class="ps-box"></span>Project 07</button>
-          <button class="ps-tab"><span class="ps-box"></span>Project 08</button>
+          <button class="ps-tab active">PitchLens</button>
+          <button class="ps-tab">Cosmos</button>
+          <button class="ps-tab">Placebet</button>
+          <button class="ps-tab">PaperTrail</button>
         </div>
         <div class="ps-arrows">
+          <div class="ps-count" aria-hidden="true"><span id="ps-cur">01</span> / <span id="ps-total">04</span></div>
           <button class="ps-arrow" id="ps-prev" aria-label="Previous project">←</button>
           <button class="ps-arrow" id="ps-next" aria-label="Next project">→</button>
         </div>
@@ -137,37 +143,9 @@
         <article class="ps-slide">
           <div class="ps-media" style="--img:url('banners/1875.jpg')"></div>
           <div class="ps-idx">[04]</div>
-          <h3 class="ps-title">Coming Soon</h3>
-          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
-          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
-        </article>
-        <article class="ps-slide">
-          <div class="ps-media" style="--img:url('banners/2610.jpg')"></div>
-          <div class="ps-idx">[05]</div>
-          <h3 class="ps-title">Coming Soon</h3>
-          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
-          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
-        </article>
-        <article class="ps-slide">
-          <div class="ps-media" style="--img:url('banners/2999.jpg')"></div>
-          <div class="ps-idx">[06]</div>
-          <h3 class="ps-title">Coming Soon</h3>
-          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
-          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
-        </article>
-        <article class="ps-slide">
-          <div class="ps-media" style="--img:url('banners/3007.jpg')"></div>
-          <div class="ps-idx">[07]</div>
-          <h3 class="ps-title">Coming Soon</h3>
-          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
-          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
-        </article>
-        <article class="ps-slide">
-          <div class="ps-media" style="--img:url('banners/205757.jpg')"></div>
-          <div class="ps-idx">[08]</div>
-          <h3 class="ps-title">Coming Soon</h3>
-          <p class="ps-desc">Placeholder for the next build. Swap this description, the backdrop and the tags when the project ships.</p>
-          <div class="ps-tags"><span>TBD</span><span>IN PROGRESS</span></div>
+          <h3 class="ps-title">PaperTrail</h3>
+          <p class="ps-desc">Local-first personal finance for the desktop — ledger, budgets, goals and an impulse-buy shelf, all over a real spreadsheet. Shipped as a Windows installer.</p>
+          <div class="ps-tags"><span>NEXT.JS</span><span>ELECTRON</span><span>LOCAL-FIRST</span></div>
         </article>
       </div>
     </div>
@@ -177,8 +155,8 @@
 <!-- ===== WORK EXPERIENCE ===== -->
 <section class="light" id="work">
   <div class="contain">
-    <div class="label reveal">Experience</div>
-    <h2 class="reveal">Where I've<br>shipped work.</h2>
+    <div class="label chapter reveal" aria-hidden="true"><span class="ch-no">03</span></div>
+    <h2 class="reveal">Experience</h2>
     <p class="tl-kicker reveal">Four years. Five roles. Two countries.</p>
 
     <div class="timeline reveal">
@@ -254,12 +232,11 @@
   <canvas class="skills-ascii" id="skills-ascii-left" aria-hidden="true"></canvas>
   <canvas class="skills-ascii" id="skills-ascii-right" aria-hidden="true"></canvas>
   <div class="contain">
-    <p class="epigraph" id="skills-epigraph">What the hand learned, <em>the machine remembers.</em></p>
-    <div class="label reveal">Capabilities</div>
-    <h2 class="reveal">Skills<br>&amp; tools.</h2>
+    <div class="label chapter reveal" aria-hidden="true"><span class="ch-no">04</span></div>
+    <h2 class="reveal">Skills</h2>
 
     <div class="shelf reveal" id="shelf">
-      <div class="book active" style="--tone:#201812; --band:#9E4432; --cover:url('banners/3007.jpg')" tabindex="0" role="button" aria-expanded="true">
+      <div class="book active" style="--tone:#0a0a0c; --cover:url('banners/3007.jpg')" tabindex="0" role="button" aria-expanded="true">
         <span class="book-spine"><span class="book-no">VOL. I</span><span class="book-title">Security</span></span>
         <div class="book-page">
           <div class="plate-no">Vol. I</div>
@@ -272,7 +249,7 @@
           </ul>
         </div>
       </div>
-      <div class="book" style="--tone:#1B1A16; --band:#B08D3E; --cover:url('banners/2999.jpg')" tabindex="0" role="button" aria-expanded="false">
+      <div class="book" style="--tone:#101012; --cover:url('banners/2999.jpg')" tabindex="0" role="button" aria-expanded="false">
         <span class="book-spine"><span class="book-no">VOL. II</span><span class="book-title">Generative AI</span></span>
         <div class="book-page">
           <div class="plate-no">Vol. II</div>
@@ -285,7 +262,7 @@
           </ul>
         </div>
       </div>
-      <div class="book" style="--tone:#241410; --band:#EDEDE8; --cover:url('banners/1875.jpg')" tabindex="0" role="button" aria-expanded="false">
+      <div class="book" style="--tone:#0a0a0c; --cover:url('banners/1875.jpg')" tabindex="0" role="button" aria-expanded="false">
         <span class="book-spine"><span class="book-no">VOL. III</span><span class="book-title">Languages &amp; Tools</span></span>
         <div class="book-page">
           <div class="plate-no">Vol. III</div>
@@ -298,21 +275,10 @@
           </ul>
         </div>
       </div>
-      <div class="book ghost-book" style="--tone:#171512; --band:#4A443B; --cover:url('banners/2610.jpg')" tabindex="0" role="button" aria-expanded="false">
+      <div class="book ghost-book" style="--tone:#06060a; --cover:url('banners/2610.jpg')" tabindex="0" role="button" aria-expanded="false">
         <span class="book-spine"><span class="book-no">VOL. IV</span><span class="book-title">Forthcoming</span></span>
         <div class="book-page">
           <div class="plate-no">Vol. IV</div>
-          <h3>Forthcoming</h3>
-          <ul>
-            <li>Reserved for the next field of study</li>
-            <li>Swap the title, cover and this list</li>
-          </ul>
-        </div>
-      </div>
-      <div class="book ghost-book" style="--tone:#15130F; --band:#4A443B; --cover:url('banners/205757.jpg')" tabindex="0" role="button" aria-expanded="false">
-        <span class="book-spine"><span class="book-no">VOL. V</span><span class="book-title">Forthcoming</span></span>
-        <div class="book-page">
-          <div class="plate-no">Vol. V</div>
           <h3>Forthcoming</h3>
           <ul>
             <li>Reserved for the next field of study</li>
@@ -328,10 +294,8 @@
 <!-- ===== CTA / TERMINAL CONTACT ===== -->
 <section class="dark" id="contact">
   <div class="contain">
-    <div class="label reveal">Contact</div>
-    <h2 class="reveal">Let's build<br>something that<br>catches what others miss.</h2>
-
-    <p class="epistola reveal">fig. 09 — <em>epistola electronica.</em> The machine carries your words; I answer in person.</p>
+    <div class="label chapter reveal" aria-hidden="true"><span class="ch-no">05</span></div>
+    <h2 class="reveal">Let's build something that catches what others miss.</h2>
 
     <div class="term reveal" id="term">
       <div class="term-bar">
@@ -351,9 +315,9 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
-<section class="dark" style="padding-top:0">
+<section class="dark" id="colophon" style="padding-top:0">
   <div class="contain">
-    <div class="fleuron" aria-hidden="true">❦</div>
+    <div class="status reveal"><span class="dot" aria-hidden="true"></span>Open to opportunities</div>
     <footer>
       <div>
         <div class="label">Email</div>
@@ -367,7 +331,7 @@
         <div class="label">Location</div>
         <p style="font-size:14px;opacity:0.6">Dayton, Ohio · <span id="clock"></span></p>
       </div>
-      <div class="copy">© Sai Woon Tip · 2026 · University of Dayton CS '28</div>
+      <div class="copy">© Sai Woon Tip · 2026 · Built by hand, no frameworks</div>
     </footer>
   </div>
 </section>

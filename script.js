@@ -1,25 +1,43 @@
-// Dynamically generate static noise PNG background to replace slow SVG filter repaints
+// — preloader: full sequence once per visit, quick lift after —
 (() => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 128;
-  canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  const imgData = ctx.createImageData(128, 128);
-  const data = imgData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    const noise = (Math.random() - 0.5) * 11;
-    data[i] = Math.max(0, Math.min(255, 244 + noise));
-    data[i+1] = Math.max(0, Math.min(255, 241 + noise));
-    data[i+2] = Math.max(0, Math.min(255, 232 + noise));
-    data[i+3] = 255;
-  }
-  ctx.putImageData(imgData, 0, 0);
-  const url = canvas.toDataURL();
-  
-  const style = document.createElement('style');
-  style.textContent = `section.light { background-image: url(${url}) !important; }`;
-  document.head.appendChild(style);
+  const root = document.documentElement;
+  const pl = document.getElementById('preloader');
+  const finish = () => {
+    root.classList.remove('js-loading');
+    root.classList.add('js-loaded');
+    setTimeout(() => pl && pl.remove(), 1200);
+  };
+  if (!pl || !root.classList.contains('js-loading')) { finish(); return; }
+  let seen;
+  try { seen = sessionStorage.getItem('intro-seen'); sessionStorage.setItem('intro-seen', '1'); } catch { seen = 1; }
+  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
+  setTimeout(finish, 1350);
 })();
+
+// — hero name: letters rise after the frontispiece lifts —
+(() => {
+  const hn = document.querySelector('.hero-name');
+  if (!hn) return;
+  hn.innerHTML = [...hn.textContent].map((c, k) =>
+    c === ' ' ? ' ' : `<span class="hl" style="transition-delay:${(0.1 + k * 0.045).toFixed(3)}s">${c}</span>`).join('');
+})();
+
+// — the scroll cue bows out once the reader begins —
+addEventListener('scroll', () => document.body.classList.toggle('scrolled', scrollY > 60), { passive: true });
+
+// — decode effect: small labels resolve out of noise when they change —
+const scrambleTo = (el, txt) => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = txt; return; }
+  clearInterval(el.__scr);
+  let f = 0;
+  const steps = 9, CH = '/·<>[]01';
+  el.__scr = setInterval(() => {
+    f++;
+    el.textContent = [...txt].map((c, i) =>
+      c === ' ' ? ' ' : (i / txt.length < f / steps ? c : CH[(Math.random() * CH.length) | 0])).join('');
+    if (f >= steps) { el.textContent = txt; clearInterval(el.__scr); }
+  }, 38);
+};
 
 // Global layout cache to prevent layout thrashing on scroll
 const layoutCache = {
@@ -113,7 +131,8 @@ const layoutCache = {
   const hero = document.querySelector('.hero-section');
   if (!cv || !hero) return;
   const ctx = cv.getContext('2d');
-  const cols = 160, rows = 90;
+  // ponytail: 128×72 grid — ~36% fewer glyphs per frame than 160×90, same look stretched
+  const cols = 128, rows = 72;
   const CELL_X = 14.4, CELL_Y = 24;
   const RAMP = ' .:-=+*#%@';
   let px, baseLum, heat, w, h;
@@ -149,9 +168,21 @@ const layoutCache = {
       tr += r; tg += g; tb += b;
     }
     // the chosen backdrop lends its color to the rest of the page
-    const n = cols * rows, dk = 0.62; // darkened so it reads on parchment
+    const n = cols * rows, dk = 0.62; // darkened variant for the ascii hands
     document.documentElement.style.setProperty('--backdrop-tint',
       `${(tr / n * dk) | 0},${(tg / n * dk) | 0},${(tb / n * dk) | 0}`);
+    // vivid variant drives every section glow: brightened + saturation-stretched
+    let vr = tr / n, vg = tg / n, vb = tb / n;
+    const mx = Math.max(vr, vg, vb), mn = Math.min(vr, vg, vb);
+    if (mx - mn < 16) { vr = 99; vg = 140; vb = 255; } // near-gray backdrop → cool default
+    else {
+      const k = 200 / mx;
+      vr *= k; vg *= k; vb *= k;
+      const m = (vr + vg + vb) / 3;
+      vr = m + (vr - m) * 2.1; vg = m + (vg - m) * 2.1; vb = m + (vb - m) * 2.1;
+    }
+    const cl = v => Math.max(20, Math.min(255, v)) | 0;
+    document.documentElement.style.setProperty('--tint', `${cl(vr)},${cl(vg)},${cl(vb)}`);
     dispatchEvent(new Event('backdroptint'));
     ctx.font = '24px ui-monospace, monospace';
     ctx.textBaseline = 'top';
@@ -181,7 +212,7 @@ const layoutCache = {
     if (t - lastFrame < 33) return; // ~30fps
     lastFrame = t;
 
-    ctx.fillStyle = '#0A0A0A';
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, w, h);
 
     for (let r = ripples.length - 1; r >= 0; r--) {
@@ -253,6 +284,14 @@ const layoutCache = {
   };
   img.onload = () => { build(); cv.style.opacity = '1'; };
   if (img.complete && img.naturalWidth > 0) build();
+
+  // smooth: only burn frames while the hero is actually on screen
+  let onScreen = true;
+  new IntersectionObserver(es => es.forEach(en => {
+    onScreen = en.isIntersecting;
+    if (onScreen) { if (!rafId && px) rafId = requestAnimationFrame(frame); }
+    else if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+  })).observe(hero);
 
   // photo picker hooks in here: fade out, swap source, rebuild, fade in
   window.setHeroImage = src => {
@@ -326,15 +365,18 @@ document.querySelectorAll('.ss-img').forEach(card => {
   if (!cur || !targets.length) return;
 
   const pos = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
-  let scale = 0, aimScale = 0, rafId = 0;
+  let scale = 0, aimScale = 0, sv = 0, rafId = 0;
   const hover = new Map();
   targets.forEach(el => hover.set(el, { x: 0, y: 0, tx: 0, ty: 0, lastWrittenX: null, lastWrittenY: null }));
 
   const loop = () => {
     pos.x += (aim.x - pos.x) * 0.24;
     pos.y += (aim.y - pos.y) * 0.24;
-    scale += (aimScale - scale) * 0.17;
-    let busy = aimScale > 0 || Math.abs(aimScale - scale) > 0.004;
+    // spring: the cursor pops in with a little overshoot, settles with damping
+    sv += (aimScale - scale) * 0.19;
+    sv *= 0.74;
+    scale += sv;
+    let busy = aimScale > 0 || Math.abs(aimScale - scale) > 0.004 || Math.abs(sv) > 0.002;
 
     const vx = aim.x - pos.x, vy = aim.y - pos.y;
     const squash = Math.min(0.28, Math.hypot(vx, vy) / 300);
@@ -374,9 +416,12 @@ document.querySelectorAll('.ss-img').forEach(card => {
     s.ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
   };
 
+  const curLabel = cur.querySelector('span');
   targets.forEach(el => {
     el.addEventListener('pointerenter', e => {
       if (scale < 0.05) { pos.x = e.clientX; pos.y = e.clientY; } // spawn under pointer
+      // the cursor says what the hand can do here: links open, slides drag
+      if (curLabel) curLabel.textContent = el.classList.contains('ps-media') ? 'drag' : 'view';
       aim.x = e.clientX; aim.y = e.clientY;
       aimScale = 1;
       aimCard(el, e);
@@ -436,10 +481,10 @@ document.querySelectorAll('.ss-img').forEach(card => {
       line('✓ delivered to my inbox. I read everything — talk soon.', 'term-ok');
       state.msg = '';
     } catch {
-      line('network said no — opening your mail app instead…', 'term-err');
-      location.href = 'mailto:' + EMAIL +
+      const href = 'mailto:' + EMAIL +
         '?subject=' + encodeURIComponent('Hello from ' + (state.name || 'your portfolio')) +
         '&body=' + encodeURIComponent(state.msg + '\n\n— ' + (state.name || 'anonymous') + ' (' + state.email + ')');
+      line(`relay unreachable — send it from your mail app instead: <a href="${href}">${EMAIL}</a>`, 'term-err');
     }
   };
 
@@ -534,7 +579,7 @@ document.querySelectorAll('.ss-img').forEach(card => {
 // — for the curious ones who open devtools —
 console.log(
   '%cSAI WOON TIP',
-  'font: 700 22px "Instrument Sans", sans-serif; letter-spacing: 3px;',
+  'font: 500 22px "Inter", sans-serif; letter-spacing: 3px;',
   '\nbuilt by hand — vanilla JS, ASCII from live canvases, no frameworks.' +
   '\nsay hi: the contact section has a real terminal. try /start'
 );
@@ -545,17 +590,42 @@ console.log(
   if (!track) return;
   const tabs = [...document.querySelectorAll('.ps-tab')];
   const n = track.children.length;
+  const cur = document.getElementById('ps-cur');
+  const tot = document.getElementById('ps-total');
+  if (tot) tot.textContent = String(n).padStart(2, '0');
   let i = 0;
   const go = k => {
     i = (k + n) % n;
     track.style.transform = `translateX(calc(${i} * (-100% - 20px)))`;
     tabs.forEach((t, j) => t.classList.toggle('active', j === i));
     [...track.children].forEach((s, j) => s.classList.toggle('active', j === i)); // gates the text reveal
+    if (cur) scrambleTo(cur, String(i + 1).padStart(2, '0'));
   };
   document.getElementById('ps-prev').addEventListener('click', () => go(i - 1));
   document.getElementById('ps-next').addEventListener('click', () => go(i + 1));
   tabs.forEach((t, j) => t.addEventListener('click', () => go(j)));
   go(0);
+
+  // drag / swipe: the slides follow the hand, then snap
+  let sx = 0, dx = 0, dragging = false;
+  track.addEventListener('pointerdown', e => {
+    dragging = true; sx = e.clientX; dx = 0;
+    track.style.transition = 'none';
+    track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    dx = e.clientX - sx;
+    track.style.transform = `translateX(calc(${i} * (-100% - 20px) + ${dx}px))`;
+  });
+  const drop = () => {
+    if (!dragging) return;
+    dragging = false;
+    track.style.transition = '';
+    Math.abs(dx) > 70 ? go(i + (dx < 0 ? 1 : -1)) : go(i);
+  };
+  track.addEventListener('pointerup', drop);
+  track.addEventListener('pointercancel', drop);
 
   // alive: the slider drifts on its own while on screen, defers to hands
   let auto = 0, hovered = false;
@@ -588,7 +658,7 @@ console.log(
     heat = new Float32Array(cols * rows);
     ctx.font = '28px ui-monospace, monospace';
     ctx.textBaseline = 'top';
-    ctx.fillStyle = 'rgba(10,10,10,0.34)';
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
   };
 
   const frame = t => {
@@ -710,6 +780,32 @@ console.log(
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 200); });
 })();
 
+// — inertial scroll: the page glides like paper being drawn, not stepped.
+//   Wheel only — touch, keyboard and scrollbar stay native; anchors take over.
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (matchMedia('(hover: none)').matches) return;
+  let target = null, raf = 0;
+  const step = () => {
+    const d = target - scrollY;
+    if (Math.abs(d) < 0.5) { target = null; raf = 0; return; }
+    scrollTo({ top: scrollY + d * 0.09, behavior: 'instant' });
+    raf = requestAnimationFrame(step);
+  };
+  addEventListener('wheel', e => {
+    if (e.ctrlKey || e.defaultPrevented) return;        // pinch-zoom stays native
+    if (e.target.closest?.('.term-body')) return;       // the terminal scrolls itself
+    e.preventDefault();
+    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    target = Math.max(0, Math.min(max, (target ?? scrollY) + dy));
+    if (!raf) raf = requestAnimationFrame(step);
+  }, { passive: false });
+  document.addEventListener('click', e => {
+    if (e.target.closest('a[href^="#"]')) target = null; // hand the wheel to the anchor
+  });
+})();
+
 // — alive: magnetic controls lean toward the cursor —
 document.querySelectorAll('.nav-cta, .ps-arrow, .pp-btn').forEach(el => {
   el.classList.add('magnetic');
@@ -778,7 +874,6 @@ const skillsSec = document.getElementById('skills');
 const skillsCvL = document.getElementById('skills-ascii-left');
 const skillsCvR = document.getElementById('skills-ascii-right');
 let ticking = false;
-let touchFired = false;
 
 const updateNavTheme = () => {
   // nav sits at padding 20px; sample just below it to see what's underneath.
@@ -793,7 +888,16 @@ const updateNavTheme = () => {
   navEl.dataset.theme = under && under.isLight ? 'light' : 'dark';
   navEl.classList.toggle('scrolled', scrollY > 40);
   const sec = document.getElementById('nav-sec');
-  if (sec) sec.textContent = '¶ ' + ((under && under.id) || 'hero');
+  const CHAPTER = {
+    hero: '00', research: '01 — research', projects: '02 — projects',
+    work: '03 — experience', skills: '04 — skills',
+    contact: '05 — contact', colophon: '05 — contact'
+  };
+  const label = CHAPTER[(under && under.id) || 'hero'] || '';
+  if (sec && sec.dataset.cur !== label) {
+    sec.dataset.cur = label;
+    scrambleTo(sec, label); // labels decode out of noise as you cross chapters
+  }
 };
 
 const updateParallax = () => {
@@ -838,13 +942,8 @@ const updateParallax = () => {
     skillsCvR.style.transform = `translateX(${d}px)`;
     skillsCvL.style.opacity = skillsCvR.style.opacity = (e * 0.5).toFixed(3);
 
-    // the seam ignites as the section arrives; the hands' contact
-    // unmasks the inscription
+    // the seam ignites as the section arrives
     skillsSec.classList.toggle('lit', e > 0.05);
-    if (e > 0.985 && !touchFired) {
-      touchFired = true;
-      document.getElementById('skills-epigraph')?.classList.add('touched');
-    }
   }
 
   // reading progress under the nav
