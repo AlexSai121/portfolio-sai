@@ -41,7 +41,15 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 @keyframes kenScale { from { scale: 1; } to { scale: 1.06; } }
 /* magnetic controls lean toward the cursor, spring back on release */
 .magnetic { transition: translate 0.55s var(--bounce-soft); }
-body { font-family: var(--font); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; background: var(--dark); }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scrollbar-width: thin; scrollbar-color: #26262a #000; }
+body {
+  font-family: var(--font); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden; /* fallback for browsers without clip */
+  overflow-x: clip;
+  background: var(--dark);
+}
 
 section { padding: 120px 40px; position: relative; }
 /* projects pins when its bottom hits the viewport bottom (JS sets the
@@ -127,6 +135,7 @@ nav { transition: color 0.3s ease, background 0.35s ease, padding 0.3s ease, bor
 nav.scrolled {
   padding: 13px 40px;
   background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
   backdrop-filter: blur(14px) saturate(130%);
   border-bottom-color: var(--rule-dark);
 }
@@ -176,7 +185,9 @@ nav .scroll-progress {
   padding: 120px 40px 0;
   overflow: hidden;
   min-height: 100vh;
+  min-height: 100svh; /* iOS: stable under the collapsing URL bar */
   display: flex; align-items: center; justify-content: center;
+  will-change: transform; /* scroll-driven drift runs every frame */
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
@@ -189,7 +200,8 @@ nav .scroll-progress {
 .photo-picker { position: absolute; top: 84px; left: 40px; z-index: 5; }
 .pp-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,0.06); backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.06);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   border: 1px solid var(--rule-dark-strong);
   border-radius: var(--r-sm);
   color: var(--text-light);
@@ -205,7 +217,8 @@ nav .scroll-progress {
   position: absolute; top: calc(100% + 10px); left: 0;
   display: grid; grid-template-columns: repeat(2, 96px); gap: 8px;
   padding: 10px;
-  background: rgba(0,0,0,0.55); backdrop-filter: blur(16px);
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border: 1px solid var(--rule-dark);
   border-radius: var(--r-lg);
   opacity: 0; transform: translateY(-10px) scale(0.96);
@@ -259,7 +272,7 @@ nav .scroll-progress {
   pointer-events: none;
   padding: 0 24px;
   font-family: var(--serif);
-  font-size: 13.5vw; font-weight: 400;
+  font-size: min(13.5vw, 205px); font-weight: 400; /* capped for ultrawide */
   letter-spacing: -0.02em; line-height: 0.8;
   white-space: nowrap; text-align: center;
   color: var(--text-light);
@@ -373,7 +386,8 @@ nav .scroll-progress {
   font-family: var(--mono); font-size: 11px; font-weight: 400;
   letter-spacing: 0.06em;
   padding: 6px 14px;
-  background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.35);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.28); border-radius: 999px;
   color: rgba(252,253,255,0.9);
 }
@@ -412,11 +426,13 @@ nav .scroll-progress {
 .ss-img { cursor: none; }
 
 /* ===== liquid glass cursor (research images) ===== */
+@media (hover: none) { .liquid-cursor { display: none; } }
 .liquid-cursor {
   position: fixed; top: 0; left: 0; z-index: 20;
   width: 84px; height: 84px; border-radius: 50%;
   display: grid; place-items: center;
   background: rgba(255,255,255,0.1);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   backdrop-filter: blur(8px) saturate(140%);
   border: 1px solid rgba(255,255,255,0.4);
   color: #fff;
@@ -676,7 +692,9 @@ nav .scroll-progress {
 }
 .book-page {
   position: absolute; inset: 0;
-  width: min(560px, 82vw); /* fixed measure so text doesn't reflow mid-open */
+  /* fixed measure so text doesn't reflow mid-open; the calc term keeps it
+     inside the open book on tablets where 560px would clip */
+  width: min(560px, calc(100vw - 350px));
   padding: 34px 36px;
   opacity: 0; transition: opacity 0.45s ease 0.3s;
 }
@@ -749,6 +767,13 @@ footer .copy { font-size: 12px; opacity: 0.4; margin-top: 60px; grid-column: 1/-
 .hero-statement.reveal.in { transform: translateY(-10vh); }
 
 /* ===== responsive ===== */
+/* tablet: the 4-column timeline gets cramped — fold to 2×2, drop the center line */
+@media (max-width: 1060px) and (min-width: 801px) {
+  .timeline { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+  .timeline::before { display: none; }
+  .tl-card { max-width: none; }
+}
+
 @media (max-width: 800px) {
   section { padding: 80px 24px; }
   nav { padding: 16px 24px; }

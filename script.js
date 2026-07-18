@@ -85,6 +85,9 @@ const layoutCache = {
       this.skillsTop = sRect.top + scrollY;
       this.skillsHeight = sRect.height;
     }
+    // hands canvas width only changes on resize — cache it out of the scroll path
+    const cvL = document.getElementById('skills-ascii-left');
+    this.skillsCvW = cvL ? cvL.clientWidth : 400;
 
     const themedSections = [...document.querySelectorAll('section.light, section.dark')];
     this.themedSections = themedSections.map(s => {
@@ -130,7 +133,7 @@ const layoutCache = {
   const cv = document.getElementById('hero-ascii');
   const hero = document.querySelector('.hero-section');
   if (!cv || !hero) return;
-  const ctx = cv.getContext('2d');
+  const ctx = cv.getContext('2d', { alpha: false }); // opaque: cheaper compositing
   // ponytail: 128×72 grid — ~36% fewer glyphs per frame than 160×90, same look stretched
   const cols = 128, rows = 72;
   const CELL_X = 14.4, CELL_Y = 24;
@@ -308,22 +311,31 @@ const layoutCache = {
   const menu = document.getElementById('pp-menu');
   if (!picker) return;
 
-  BANNERS.forEach((f, i) => {
-    const t = new Image();
-    t.src = 'banners/' + f;
-    t.alt = '';
-    t.style.transitionDelay = (i * 45) + 'ms'; // stagger the drop-in
-    if (i === 0) t.classList.add('active');
-    t.addEventListener('click', () => {
-      menu.querySelector('.active')?.classList.remove('active');
-      t.classList.add('active');
-      window.setHeroImage(t.src);
-      picker.classList.remove('open');
+  // thumbs are built on first open — 6 of these images never decode otherwise
+  let built = false;
+  const buildMenu = () => {
+    built = true;
+    BANNERS.forEach((f, i) => {
+      const t = new Image();
+      t.decoding = 'async';
+      t.src = 'banners/' + f;
+      t.alt = '';
+      t.style.transitionDelay = (i * 45) + 'ms'; // stagger the drop-in
+      if (i === 0) t.classList.add('active');
+      t.addEventListener('click', () => {
+        menu.querySelector('.active')?.classList.remove('active');
+        t.classList.add('active');
+        window.setHeroImage(t.src);
+        picker.classList.remove('open');
+      });
+      menu.appendChild(t);
     });
-    menu.appendChild(t);
-  });
+  };
 
-  btn.addEventListener('click', () => picker.classList.toggle('open'));
+  btn.addEventListener('click', () => {
+    if (!built) { buildMenu(); void menu.offsetWidth; } // settle initial styles so the stagger still plays
+    picker.classList.toggle('open');
+  });
   document.addEventListener('click', e => {
     if (!picker.contains(e.target)) picker.classList.remove('open');
   });
@@ -360,6 +372,7 @@ document.querySelectorAll('.ss-img').forEach(card => {
 //   The same rAF loop eases each card's --hover vars so the image glides
 //   instead of jumping (no CSS transition fighting scroll updates).
 (() => {
+  if (matchMedia('(hover: none)').matches) return; // touch: no floating cursor
   const cur = document.getElementById('liquid-cursor');
   const targets = document.querySelectorAll('.ss-img, .ps-media');
   if (!cur || !targets.length) return;
@@ -647,8 +660,10 @@ console.log(
   cv.setAttribute('aria-hidden', 'true');
   sec.prepend(cv);
   const ctx = cv.getContext('2d');
-  const cols = 100, rows = 60;
-  const CELL_X = 16, CELL_Y = 28;
+  // ponytail: 84×50 grid at 14×24 cells — half the backing-store RAM of the
+  // old 100×60/16×28, stretched to the same coverage
+  const cols = 84, rows = 50;
+  const CELL_X = 14, CELL_Y = 24;
   const RAMP = ' ..·:;+*#';
   let heat, w, h, rafId = 0, last = 0;
 
@@ -656,7 +671,7 @@ console.log(
     w = cols * CELL_X; h = rows * CELL_Y;
     cv.width = w; cv.height = h;
     heat = new Float32Array(cols * rows);
-    ctx.font = '28px ui-monospace, monospace';
+    ctx.font = '24px ui-monospace, monospace';
     ctx.textBaseline = 'top';
     ctx.fillStyle = 'rgba(0,0,0,0.3)';
   };
@@ -727,7 +742,8 @@ console.log(
   const renderHalf = (cv, half) => {
     const cw = cv.clientWidth || sec.clientWidth / 2;
     const ch = cv.clientHeight || sec.clientHeight;
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    // ponytail: decorative glyph art — DPR 1.25 cap halves retina backing RAM
+    const dpr = Math.min(devicePixelRatio || 1, 1.25);
     cv.width = cw * dpr; cv.height = ch * dpr;
     const ctx = cv.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -806,17 +822,19 @@ console.log(
   });
 })();
 
-// — alive: magnetic controls lean toward the cursor —
-document.querySelectorAll('.nav-cta, .ps-arrow, .pp-btn').forEach(el => {
-  el.classList.add('magnetic');
-  el.addEventListener('pointermove', e => {
-    const r = el.getBoundingClientRect();
-    el.style.translate =
-      `${(((e.clientX - r.left) / r.width) - 0.5) * 8}px ` +
-      `${(((e.clientY - r.top) / r.height) - 0.5) * 6}px`;
+// — alive: magnetic controls lean toward the cursor (pointer devices only) —
+if (matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.nav-cta, .ps-arrow, .pp-btn').forEach(el => {
+    el.classList.add('magnetic');
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.translate =
+        `${(((e.clientX - r.left) / r.width) - 0.5) * 8}px ` +
+        `${(((e.clientY - r.top) / r.height) - 0.5) * 6}px`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.translate = '0px 0px'; });
   });
-  el.addEventListener('pointerleave', () => { el.style.translate = '0px 0px'; });
-});
+}
 
 // — alive: scroll mass — headings trail the scroll velocity, then settle —
 (() => {
@@ -901,8 +919,15 @@ const updateNavTheme = () => {
 };
 
 const updateParallax = () => {
-  updateNavTheme();
+  // — read phase: every live rect is measured before any style write, so the
+  //   frame pays for at most one layout pass instead of thrashing —
+  // projects slider media sit inside the sticky (pinnable) section, so
+  // cached document coordinates would lie whenever it's pinned
+  const psRects = psMedias.map(el => el.getBoundingClientRect());
 
+  updateNavTheme(); // reads its probe rects first thing, then writes nav state
+
+  // — write phase —
   // reveal fallback: IO can miss elements entering under the sticky curtain
   layoutCache.workReveals = layoutCache.workReveals.filter(item => {
     if (item.top - scrollY < layoutCache.windowHeight * 0.85) {
@@ -917,11 +942,8 @@ const updateParallax = () => {
     item.el.style.setProperty('--parallax', (rectTop / layoutCache.windowHeight).toFixed(4));
   });
 
-  // projects slider: slide images drift against scroll.
-  // Live rects: these sit inside the sticky (pinnable) projects section,
-  // so cached document coordinates would lie whenever it's pinned.
-  psMedias.forEach(el => {
-    const r = el.getBoundingClientRect();
+  psMedias.forEach((el, k) => {
+    const r = psRects[k];
     el.style.setProperty('--pspar', ((r.top + r.height / 2 - layoutCache.windowHeight / 2) / layoutCache.windowHeight).toFixed(4));
   });
 
@@ -937,7 +959,7 @@ const updateParallax = () => {
   if (skillsSec && skillsCvL) {
     const currentSkillsTop = layoutCache.skillsTop - scrollY;
     const e = Math.max(0, Math.min(1, (layoutCache.windowHeight - currentSkillsTop) / (layoutCache.windowHeight * 0.9)));
-    const d = ((1 - e) * (skillsCvL.clientWidth || 400) * 0.7).toFixed(1);
+    const d = ((1 - e) * (layoutCache.skillsCvW || 400) * 0.7).toFixed(1);
     skillsCvL.style.transform = `translateX(${-d}px)`;
     skillsCvR.style.transform = `translateX(${d}px)`;
     skillsCvL.style.opacity = skillsCvR.style.opacity = (e * 0.5).toFixed(3);
